@@ -1,9 +1,14 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { KAFKA_CLIENT } from './kafka.constants';
+import { KafkaConsumer } from './kafka.consumer';
+import { KafkaTestController } from './kafka.connection-test';
+import { KafkaProducer } from './kafka.producer';
+import { DronesModule } from 'src/drones/drones.module';
 
 @Module({
   imports: [
+    DronesModule,
     ClientsModule.register([
       {
         name: KAFKA_CLIENT,
@@ -19,6 +24,15 @@ import { KAFKA_CLIENT } from './kafka.constants';
         },
       },
     ]),
+  ],
+  controllers:[
+    KafkaConsumer,
+  ],
+  providers: [
+    KafkaProducer,
+  ],
+  exports: [
+    KafkaProducer,
   ],
 })
 export class KafkaModule {}
